@@ -1,62 +1,120 @@
 import Head from 'next/head';
+import React, { useState, useEffect } from 'react';
 import styles from '../styles/Home.module.css';
+import Header from './header';
+import Body from './body';
 
 export default function Home() {
+  const [myCart, setCart] = useState([]);
+
+  const [fullList, setFullList] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [variants, setVariants] = useState([]);
+
+
+  function combineProductsWithVariants(products, variants) {
+    return products.map(product => {
+      const productVariants = variants.filter(variant => variant.sync_product_id === product.id);
+      return {
+        ...product,
+        selected: productVariants[0],
+        variants: productVariants,
+      };
+    });
+  }
+
+  const updateCart = (newCartValue) =>{
+    setCart(newCartValue);
+  }
+
+  const addToCart = (item) => {
+    setCart((prevCart) => [...prevCart, item]);
+  };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("/api/products");
+  
+        if (response.ok) {
+          const data = await response.json();
+          setProducts(data.result);
+          return data.result;
+        } else {
+          console.error("Error fetching products:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+  
+    const getVariantData = async (productIds) => {
+      try {
+        const allVariants = [];
+  
+        for (const productId of productIds) {
+          const response = await fetch(`/api/product/${productId}`);
+  
+          if (response.ok) {
+            const data = await response.json();
+            allVariants.push(...data.sync_variants);
+          } else {
+            console.error("Error fetching variants:", response.statusText);
+          }
+        }
+  
+        setVariants(allVariants);
+        return allVariants;
+      } catch (error) {
+        console.error("Error fetching variants:", error);
+      }
+    };
+  
+    const fetchData = async () => {
+      const products = await fetchProducts();
+      const productIds = products.map((product) => product.id);
+      const variants = await getVariantData(productIds);
+      const temp = combineProductsWithVariants(products, variants);
+      
+      setFullList(temp);
+    };
+  
+    fetchData();
+  }, []);
+  
+  
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Hire Dane</title>
+        <link rel="icon" href="assets/imgs/logo_trans.png" />
       </Head>
 
       <main>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <Header cart={myCart} updateCart={updateCart} />
+        <div style={{paddingTop:'5%'}}></div>
+        <div>THIS IS AN EXAMPLE WEBSITE. Please don't steal my stuff and just hire me instead!</div>
+        <div style={{paddingTop:'5%'}}></div>
+        {fullList.length > 0 ?
+        <Body cart={myCart} products={fullList} addToCart={addToCart} updateCart={updateCart} />
+          :<div style={{justifyContent:'center', textAlign:'center'}}><img src="assets/imgs/cool-load.gif"/><br></br></div> }
+      
       </main>
+
+     
 
       <footer>
         <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          href="https://danehoward.co"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel" className={styles.logo} />
+          <div style={{flexDirection:'row', alignContent:'center' }}>
+          <div style={{ textAlign:'center'}}>Powered by</div>
+          <div style={{ textAlign:'center'}}><img src="assets/imgs/logo_trans.png" alt="Dane Howard" className={styles.logo} /></div>
+          </div>
+
         </a>
       </footer>
 
@@ -64,6 +122,7 @@ export default function Home() {
         main {
           padding: 5rem 0;
           flex: 1;
+          width: 100%;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -71,7 +130,7 @@ export default function Home() {
         }
         footer {
           width: 100%;
-          height: 100px;
+          height: 90px;
           border-top: 1px solid #eaeaea;
           display: flex;
           justify-content: center;
