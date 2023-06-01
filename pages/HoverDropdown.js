@@ -103,7 +103,6 @@ const HoverDropdown = (props) => {
 </div>
 
       );
-  // 757-664-7800
     const options = [
         { value: 'all', label: 'All' },
         { value: 'cart', label: 'My Cart' },

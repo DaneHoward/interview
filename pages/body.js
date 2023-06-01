@@ -38,7 +38,6 @@ const Body = (props) => {
   return (
     
     <div style={{flexWrap:'wrap', display:'flex', width:'80%', 
-     //border: '1px solid black', 
      padding: '10px', justifyContent:'space-evenly'}}>
       {props.products && props.products.map((option, index) => (
            <div style={{

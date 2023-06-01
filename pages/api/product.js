@@ -11,7 +11,7 @@ export default async function handler(req, res) {
       });
   
       const data = await response.json();
-     // console.log('here is your stinking data', data);
+      
       res.status(response.status).json(data);
     } catch (error) {
       res.status(500).json({ error: "Error fetching products." });
