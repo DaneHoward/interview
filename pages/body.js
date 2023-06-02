@@ -41,7 +41,7 @@ const Body = (props) => {
      //border: '1px solid black', 
      padding: '10px', justifyContent:'space-evenly'}}>
       {props.products && props.products.map((option, index) => (
-           <div className="flex flex-col items-center justify-center border-2 p-2 w-full sm:w-1/2 lg:w-1/4">
+           <div className={styles.itemBoxes}>
               <div><h4>{option.name}</h4></div>
               
               <div> <ImageWithModal
