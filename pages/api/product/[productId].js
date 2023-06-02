@@ -1,7 +1,7 @@
 async function getProductDataById(id) {
     try {
-      const oauthToken = ""; // Replace this with your actual OAuth token
-      const response = await fetch(`https://localhost:3000/store/products/${id}`, {
+      const oauthToken = "ZofOgXzhGyoqKgBacjrF1uC3SfhxcbNrSbKtPyGv"; // Replace this with your actual OAuth token
+      const response = await fetch(`https://api.printful.com/store/products/${id}`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${oauthToken}`

@@ -37,20 +37,11 @@ const Body = (props) => {
   
   return (
     
-    <div style={{flexWrap:'wrap', display:'flex', width:'80%', 
+    <div style={{flexWrap:'wrap', display:'flex', width:'100%', 
+     //border: '1px solid black', 
      padding: '10px', justifyContent:'space-evenly'}}>
       {props.products && props.products.map((option, index) => (
-           <div style={{
-            display: 'flex',
-            flexDirection:'column',
-            paddingBottom:'1vh',
-            marginBottom:'1vh',
-            justifyContent: 'center',
-            alignItems: 'center',
-            border: '2px solid black',
-            flex: '0 0 30%',
-            padding: '10px',
-          }}>
+           <div className="flex flex-col items-center justify-center border-2 p-2 w-full sm:w-1/2 lg:w-1/4">
               <div><h4>{option.name}</h4></div>
               
               <div> <ImageWithModal
@@ -58,7 +49,7 @@ const Body = (props) => {
         alt="Your image description"
         style={{ width: '100%' }}
       /></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', marginTop:'4px', width:'70%' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', marginTop:'4px', width:'80%' }}>
   <div>
     {selectedVals[index] && selectedVals[index].selected
       ? '$' + selectedVals[index].selected.retail_price
